@@ -102,6 +102,9 @@ export class ExpressDriver extends BaseDriver {
                 if (!this.authorizationChecker)
                     throw new AuthorizationCheckerNotDefinedError();
 
+                if (request.method.toLowerCase() !== actionMetadata.type)
+                    return next();
+
                 const action: Action = { request, response, next };
                 try {
                     const checkResult = this.authorizationChecker(action, actionMetadata.authorizedRoles);
