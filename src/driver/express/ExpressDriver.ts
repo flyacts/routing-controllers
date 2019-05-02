@@ -145,6 +145,20 @@ export class ExpressDriver extends BaseDriver {
                 });
         }
 
+        if (actionMetadata.isFormFieldUsed || actionMetadata.isFormFieldsUsed) {
+            const multer = this.loadMulter();
+            actionMetadata.params
+                .filter(param => param.type === "form-field")
+                .forEach(param => {
+                    defaultMiddlewares.push(multer(param.extraOptions).single(param.name));
+                });
+            actionMetadata.params
+                .filter(param => param.type === "form-fields")
+                .forEach(param => {
+                    defaultMiddlewares.push(multer(param.extraOptions).array(param.name));
+                });
+        }
+
         // user used middlewares
         const uses = [...actionMetadata.controllerMetadata.uses, ...actionMetadata.uses];
         const beforeMiddlewares = this.prepareMiddlewares(uses.filter(use => !use.afterAction));
@@ -224,6 +238,10 @@ export class ExpressDriver extends BaseDriver {
 
             case "files":
                 return request.files;
+
+            case "form-field":
+            case "form-fields":
+                return request.body[param.name.toLowerCase()];
 
             case "cookie":
                 if (!request.headers.cookie) return;

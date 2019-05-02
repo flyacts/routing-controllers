@@ -19,4 +19,6 @@ export type ParamType = "body"
     |"response"
     |"context"
     |"current-user"
-    |"custom-converter";
+    |"custom-converter"
+    |"form-field"
+    |"form-fields";

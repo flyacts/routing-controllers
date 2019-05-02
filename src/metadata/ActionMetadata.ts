@@ -80,6 +80,16 @@ export class ActionMetadata {
     isFilesUsed: boolean;
 
     /**
+     * Indicate if this action has form data field
+     */
+    isFormFieldUsed: boolean;
+
+    /**
+     * Indicate if this action has form data fields
+     */
+    isFormFieldsUsed: boolean;
+
+    /**
      * Indicates if controller of this action is json-typed.
      */
     isJsonTyped: boolean;
@@ -199,7 +209,9 @@ export class ActionMetadata {
         this.isBodyUsed = !!this.params.find(param => param.type === "body" || param.type === "body-param");
         this.isFilesUsed = !!this.params.find(param => param.type === "files");
         this.isFileUsed = !!this.params.find(param => param.type === "file");
-        this.isJsonTyped = (contentTypeHandler !== undefined 
+        this.isFormFieldUsed = !!this.params.find(param => param.type === "form-field");
+        this.isFormFieldsUsed = !!this.params.find(param => param.type === "form-fields");
+        this.isJsonTyped = (contentTypeHandler !== undefined
             ? /json/.test(contentTypeHandler.value)
             : this.controllerMetadata.type === "json"
         );

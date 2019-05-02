@@ -21,6 +21,8 @@ import {Body} from "../../src/decorator/Body";
 import {BodyParam} from "../../src/decorator/BodyParam";
 import {UploadedFile} from "../../src/decorator/UploadedFile";
 import {UploadedFiles} from "../../src/decorator/UploadedFiles";
+import {FormField} from "../../src/decorator/FormField";
+import {FormFields} from "../../src/decorator/FormFields";
 import {ContentType} from "../../src/decorator/ContentType";
 import {JsonController} from "../../src/decorator/JsonController";
 
@@ -298,6 +300,21 @@ describe("action parameters", () => {
             @Post("/photos-with-required")
             postPhotosWithRequired(@UploadedFiles("photos", { required: true }) files: any): any {
                 return `<html><body>${files[0].originalname}</body></html>`;
+            }
+            
+            @Post("/form-field")
+            formField(@FormField("field") field: string) {
+                return `<html><body>${field}</body></html>`;
+            }
+
+            @Post("/form-fields")
+            formFields(@FormFields("field") fields: string[]) {
+                return `<html><body>${fields.join(",")}</body></html>`;
+            }
+            
+            @Post("/form-field-typed")
+            formFieldTyped(@FormField("field") field: number) {
+                return `<html><body>${typeof field === "number"}</body></html>`;
             }
 
         }
@@ -921,6 +938,43 @@ describe("action parameters", () => {
         });
         assertRequest([3001, 3002], "post", "photos-with-required", undefined, {}, response => {
             expect(response).to.be.status(400);
+        });
+
+    });
+
+    describe("FormField should contain values", () => {
+        const requestOptions = {
+            formData: {
+                field: "Hello World",
+            },
+        };
+         assertRequest([3001], "post", "form-field", undefined, requestOptions, response => {
+             expect(response).to.be.status(200);
+             expect(response.body).to.be.equal('<html><body>Hello World</body></html>')
+        });
+    });
+
+    describe("FormFields schould contain values", () => {
+        const requestOptions = {
+            formData: {
+                field: ["Hello World", "Hello World2"],
+            },
+        };
+         assertRequest([3001], "post", "form-fields", undefined, requestOptions, response => {
+             expect(response).to.be.status(200);
+             expect(response.body).to.be.equal('<html><body>Hello World,Hello World2</body></html>')
+        });
+    });
+
+    describe("FormField should contain typed values", () => {
+         const requestOptions = {
+            formData: {
+                field: 42,
+            },
+        };
+         assertRequest([3001], "post", "form-field-typed", undefined, requestOptions, response => {
+             expect(response).to.be.status(200);
+             expect(response.body).to.be.equal('<html><body>true</body></html>')
         });
 
     });
