@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/flyacts/routing-controllers.svg?branch=master)](https://travis-ci.org/flyacts/routing-controllers)
 [![codecov](https://codecov.io/gh/flyacts/routing-controllers/branch/master/graph/badge.svg)](https://codecov.io/gh/flyacts/routing-controllers)
-[![npm version](https://badge.fury.io/js/@flyacts/routing-controllers.svg)](https://badge.fury.io/js/@flyacts/routing-controllers)
+[![npm version](https://badge.fury.io/js/%40flyacts%2Frouting-controllers.svg)](https://badge.fury.io/js/%40flyacts%2Frouting-controllers)
 [![Dependency Status](https://david-dm.org/flyacts/routing-controllers.svg)](https://david-dm.org/flyacts/routing-controllers)
 [![Join the chat at https://gitter.im/typestack/routing-controllers](https://badges.gitter.im/typestack/routing-controllers.svg)](https://gitter.im/typestack/routing-controllers?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
