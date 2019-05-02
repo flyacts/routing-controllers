@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import * as path from 'path';
 import {Controller} from "../../src/decorator/Controller";
 import {Get} from "../../src/decorator/Get";
 import {Res} from "../../src/decorator/Res";
@@ -41,23 +42,23 @@ describe("template rendering", () => {
 
     let expressApp: any;
     before(done => {
-        const path = __dirname + "/../../../../test/resources";
+        const _path = path.resolve(__dirname, '../resources');
         const server = createExpressServer();
         const mustacheExpress = require("mustache-express");
         server.engine("html", mustacheExpress());
         server.set("view engine", "html");
-        server.set("views", path);
-        server.use(require("express").static(path));
+        server.set("views", _path);
+        server.use(require("express").static(_path));
         expressApp = server.listen(3001, done);
     });
     after(done => expressApp.close(done));
 
     let koaApp: any;
     before(done => {
-        const path = __dirname + "/../../../../test/resources";
+        const _path = path.resolve(__dirname, '../resources');
         const server = createKoaServer();
         let koaViews = require("koa-views");
-        server.use(koaViews(path, { map: { html: "handlebars" } } ));
+        server.use(koaViews(_path, { map: { html: "handlebars" } } ));
         koaApp = server.listen(3002, done);
     });
     after(done => koaApp.close(done));
