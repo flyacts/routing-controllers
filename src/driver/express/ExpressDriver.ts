@@ -131,32 +131,50 @@ export class ExpressDriver extends BaseDriver {
             });
         }
 
+        const multerFields: any[] = [];
+
         if (actionMetadata.isFileUsed || actionMetadata.isFilesUsed) {
-            const multer = this.loadMulter();
             actionMetadata.params
                 .filter(param => param.type === "file")
                 .forEach(param => {
-                    defaultMiddlewares.push(multer(param.extraOptions).single(param.name));
+                    multerFields.push({
+                        ...param.extraOptions,
+                        name: param.name
+                    })
                 });
             actionMetadata.params
                 .filter(param => param.type === "files")
                 .forEach(param => {
-                    defaultMiddlewares.push(multer(param.extraOptions).array(param.name));
+                    multerFields.push({
+                        ...param.extraOptions,
+                        name: param.name
+                    })
                 });
         }
 
         if (actionMetadata.isFormFieldUsed || actionMetadata.isFormFieldsUsed) {
-            const multer = this.loadMulter();
             actionMetadata.params
                 .filter(param => param.type === "form-field")
                 .forEach(param => {
-                    defaultMiddlewares.push(multer(param.extraOptions).single(param.name));
+                    multerFields.push({
+                        ...param.extraOptions,
+                        name: param.name
+                    })
                 });
             actionMetadata.params
                 .filter(param => param.type === "form-fields")
                 .forEach(param => {
-                    defaultMiddlewares.push(multer(param.extraOptions).array(param.name));
+                    multerFields.push({
+                        ...param.extraOptions,
+                        name: param.name
+                    });
                 });
+        }
+
+        if (multerFields.length > 0) {
+            const multer = this.loadMulter();
+            console.dir(multerFields);
+            defaultMiddlewares.push(multer().fields(multerFields));
         }
 
         // user used middlewares
@@ -234,14 +252,14 @@ export class ExpressDriver extends BaseDriver {
                 return request.headers;
 
             case "file":
-                return request.file;
+                return request.files[param.name][0];
 
             case "files":
-                return request.files;
+                return request.files[param.name];
 
             case "form-field":
             case "form-fields":
-                return request.body[param.name.toLowerCase()];
+                return request.body[param.name];
 
             case "cookie":
                 if (!request.headers.cookie) return;
