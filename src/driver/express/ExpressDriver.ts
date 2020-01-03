@@ -251,7 +251,7 @@ export class ExpressDriver extends BaseDriver {
                 return request.headers;
 
             case "file":
-                if (typeof request.files === 'object' && request.file !== null) {
+                if (typeof request.files === 'object' && request.files !== null) {
                     return request.files[param.name][0];
                 }
 
